@@ -3,7 +3,7 @@ export const state = {
   userEntries:    [],
   activeFilter:   'all',
   searchTerm:     '',
-  currentView:    'grid',
+  currentView:    'map',
   mapInstance:    null,
   markers:        [],
   activeMarkerId: null,

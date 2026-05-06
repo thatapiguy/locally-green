@@ -41,6 +41,17 @@ export async function submitListing() {
   document.getElementById('stat-total').textContent = all().length;
 }
 
+export function sharePage(title) {
+  const url = location.href;
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else {
+    navigator.clipboard?.writeText(url)
+      .then(() => showToast('Link copied to clipboard!'))
+      .catch(() => showToast('Copy: ' + url));
+  }
+}
+
 export function showToast(msg, isError) {
   const t = document.getElementById('toast');
   document.getElementById('toast-msg').textContent = msg;

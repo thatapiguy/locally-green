@@ -8,6 +8,8 @@
     "type": "Garden Center",
     "phone": "(937) 274-1154",
     "website": "https://northdaytongarden.com",
+    "facebook": "",
+    "instagram": "",
     "desc": "Family-owned since 1963, North Dayton Garden Center carries over 5,000 plant varieties and is home to Dayton's largest selection of homegrown houseplants and bonsai trees. Owner Pete Kossoudji has cultivated a reputation for unusual annuals, quality vegetables, and rare perennials that you simply won't find at box stores.",
     "specialties": ["Bonsai", "Houseplants", "Annuals", "Vegetables", "Perennials", "Native Plants"],
     "hours": {
@@ -25,6 +27,8 @@
     "type": "Greenhouse",
     "phone": "(937) 687-1012",
     "website": "https://www.stockslagers.com",
+    "facebook": "",
+    "instagram": "",
     "desc": "A family-owned destination spanning more than 9 acres of indoor and outdoor growing space. Open year-round with spring bedding plants, fall mums, and Christmas poinsettias. The team hosts a weekly gardening advice radio segment every Wednesday at 9:30am — a beloved institution among Miami Valley gardeners.",
     "specialties": ["Bedding Plants", "Fall Mums", "Poinsettias", "Vegetables", "Shrubs", "Bulk Supplies"],
     "hours": {
@@ -42,6 +46,8 @@
     "type": "Garden Center",
     "phone": "(937) 434-1326",
     "website": "https://www.siebenthaler.com",
+    "facebook": "",
+    "instagram": "",
     "desc": "With over 150 years of continuous service in the Dayton area, Siebenthaler's is the region's most storied garden center. They grow most of their own plants on a 250-acre Beavercreek nursery farm, ensuring stock is fully acclimated to southwest Ohio's soil and weather. Full landscape design and installation services available.",
     "specialties": ["Trees", "Shrubs", "Perennials", "Landscape Design", "Local Grown", "Annuals"],
     "hours": {
@@ -59,6 +65,8 @@
     "type": "Nursery",
     "phone": "(937) 833-4500",
     "website": "https://www.brownsnursery.com",
+    "facebook": "",
+    "instagram": "",
     "desc": "A 22-acre nursery with 65+ years of growing expertise in shade and ornamental trees, evergreens, shrubs, and select perennials. The Brown family opened to the public in the 1980s and now welcomes homeowners every Friday through Sunday alongside their wholesale and re-wholesaler business.",
     "specialties": ["Shade Trees", "Ornamental Trees", "Evergreens", "Shrubs", "Wholesale", "Landscaping"],
     "hours": {
@@ -76,6 +84,8 @@
     "type": "Garden Center",
     "phone": "(937) 293-5671",
     "website": "",
+    "facebook": "",
+    "instagram": "",
     "desc": "A well-regarded local garden center and landscaping company serving the south Dayton area with a strong selection of annuals, perennials, shrubs, and trees. Knollwood offers landscape design and installation services for residential and commercial clients.",
     "specialties": ["Annuals", "Perennials", "Shrubs", "Trees", "Landscape Design"],
     "hours": {
@@ -93,6 +103,8 @@
     "type": "Garden Center",
     "phone": "",
     "website": "",
+    "facebook": "",
+    "instagram": "",
     "desc": "A 14-acre full-service garden center halfway between Dayton and Cincinnati. A beloved destination for plant lovers across the Miami Valley, with an emphasis on seasonal color and container gardens.",
     "specialties": ["Seasonal Color", "Containers", "Shrubs", "Perennials", "Landscape"],
     "hours": {
@@ -110,6 +122,8 @@
     "type": "Nursery",
     "phone": "",
     "website": "",
+    "facebook": "",
+    "instagram": "",
     "desc": "An extensive selection of trees, shrubs, perennials, annuals, and herbs grown on their own farm. Shademakers opens a seasonal Christmas shop starting in November, carrying wreaths, trees, and poinsettias.",
     "specialties": ["Trees", "Shrubs", "Perennials", "Herbs", "Christmas Trees"],
     "hours": {
@@ -127,6 +141,8 @@
     "type": "Garden Center",
     "phone": "",
     "website": "",
+    "facebook": "",
+    "instagram": "",
     "desc": "A popular local garden center frequently recommended by Dayton-area gardeners for its plant selection and knowledgeable staff. A neighborhood staple.",
     "specialties": ["Annuals", "Perennials", "Vegetables", "Houseplants"],
     "hours": {
@@ -144,6 +160,8 @@
     "type": "Garden Center",
     "phone": "",
     "website": "",
+    "facebook": "",
+    "instagram": "",
     "desc": "Garden center, flower shop, and gift shop in one. Over 2 acres of greenhouses with 90% of plants grown on-site. Known for a strong selection of houseplants, trees, annuals, perennials, roses, herbs, and vegetables.",
     "specialties": ["Houseplants", "Roses", "Annuals", "Perennials", "Gift Shop", "Flowers"],
     "hours": {

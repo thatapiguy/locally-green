@@ -83,8 +83,13 @@ export function renderDetail(n) {
               </div>` : ''}
               <div class="detail-meta-row">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                ${n.city}, Ohio · USDA Zone 5b/6a
+                ${n.city}, Ohio · USDA Zone 6a/6b
               </div>
+              ${(n.instagram || n.facebook) ? `<div class="detail-meta-row social-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                ${n.facebook ? `<a href="${n.facebook}" target="_blank" class="social-link">Facebook</a>` : ''}
+                ${n.instagram ? `<a href="${n.instagram}" target="_blank" class="social-link">Instagram</a>` : ''}
+              </div>` : ''}
             </div>
           </div>
           <div class="detail-actions">
@@ -92,6 +97,10 @@ export function renderDetail(n) {
             ${n.phone
               ? `<a class="action-btn secondary" href="tel:${n.phone}">Call now</a>`
               : `<button class="action-btn secondary" onclick="document.getElementById('overlay').classList.add('open')">Suggest edit</button>`}
+            <button class="action-btn secondary share-btn" onclick="sharePage('${n.name} — LocallyGreen')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share
+            </button>
           </div>
         </div>
       </div>

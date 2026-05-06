@@ -2,7 +2,7 @@ import { state, setSeedData, load } from './state.js';
 import { navigate, route } from './router.js';
 import { openWGN } from './wgn.js';
 import { mapClick } from './map.js';
-import { switchView, submitListing } from './ui.js';
+import { switchView, submitListing, sharePage } from './ui.js';
 import { renderGrid } from './grid.js';
 import { renderMap } from './map.js';
 
@@ -32,6 +32,7 @@ async function init() {
   window.submitListing = submitListing;
   window.openWGN       = openWGN;
   window.mapClick      = mapClick;
+  window.sharePage     = sharePage;
 
   document.getElementById('search').addEventListener('input', e => {
     state.searchTerm = e.target.value;

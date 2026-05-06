@@ -61,7 +61,7 @@
             <div class="city-stat-lbl">Cities</div>
           </div>
           <div class="city-stat">
-            <div class="city-stat-num" id="stat-zone">5b</div>
+            <div class="city-stat-num" id="stat-zone">6a/6b</div>
             <div class="city-stat-lbl">USDA Zone</div>
           </div>
           <div class="city-stat">
@@ -73,7 +73,7 @@
     </div>
 
     <!-- What's Good Now -->
-    <div class="wgn-section">
+    <div class="wgn-section" style="display:none">
       <div class="wgn-inner">
         <div class="wgn-header">
           <div class="wgn-title">What's Good Now</div>
@@ -97,17 +97,17 @@
         <button class="pill" data-filter="Wholesale">Wholesale</button>
       </div>
       <div class="view-toggle">
-        <button class="view-btn active" id="btn-grid">
+        <button class="view-btn" id="btn-grid">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Grid
         </button>
-        <button class="view-btn" id="btn-map">
+        <button class="view-btn active" id="btn-map">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Map
         </button>
       </div>
     </div>
 
     <!-- Grid view -->
-    <div class="grid-view" id="grid-view">
+    <div class="grid-view hidden" id="grid-view">
       <div class="dir-body">
         <p class="dir-meta" id="dir-meta"></p>
         <div class="grid" id="grid"></div>
@@ -115,7 +115,7 @@
     </div>
 
     <!-- Map view -->
-    <div class="map-view hidden" id="map-view">
+    <div class="map-view" id="map-view">
       <div style="flex:1;position:relative">
         <div id="map"></div>
         <div class="map-legend">
