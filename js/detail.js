@@ -1,14 +1,14 @@
 import { getWGNSeed } from './state.js';
-import { tc, BADGE_CLASS, SOURCE_ICON } from './data.js';
+import { tc, BADGE_CLASS, BADGE_LABELS, SOURCE_ICON, timeAgo } from './data.js';
 import { mkIcon } from './map.js';
 import { setMeta, injectNurserySchema } from './seo.js';
 
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 export function renderDetail(n) {
   const today   = DAYS[new Date().getDay()];
   const c       = tc(n);
-  const wgnSeed = getWGNSeed();
+  const allFeed = getWGNSeed();
 
   const hoursRows = n.hours
     ? Object.entries(n.hours).map(([d, h]) => `
@@ -20,7 +20,7 @@ export function renderDetail(n) {
 
   const specs = (n.specialties || []).map(s => `<span class="spec-tag">${s}</span>`).join('');
 
-  const feedItems = wgnSeed.filter(p => n.name.includes(p.nursery.split(' ')[0])).slice(0, 3);
+  const feedItems = allFeed.filter(p => p.nursery_id === n.id).slice(0, 5);
   const feedHTML  = feedItems.length
     ? feedItems.map(p => `
         <div class="feed-item">
@@ -32,13 +32,16 @@ export function renderDetail(n) {
           <div class="feed-content">
             <div class="feed-badge-row">
               <span class="wgn-badge ${BADGE_CLASS[p.type] || 'badge-tip'}">${p.badge}</span>
-              <span style="font-size:.7rem;color:var(--text3)">${p.time}</span>
+              <span style="font-size:.7rem;color:var(--text3)">${timeAgo(p.created_at)}</span>
             </div>
             <div class="feed-text">${p.text}</div>
-            <div class="feed-meta"><span>${SOURCE_ICON[p.sourceType]} ${p.source}</span></div>
+            <div class="feed-meta"><span>${SOURCE_ICON[p.source_type] || '👤'} ${p.source}</span></div>
           </div>
         </div>`).join('')
-    : `<p style="font-size:.84rem;color:var(--text3);padding:8px 0">No recent updates. <span style="color:var(--fern);cursor:pointer">Add one?</span></p>`;
+    : `<p style="font-size:.84rem;color:var(--text3);padding:8px 0">No recent updates yet.</p>`;
+
+  const postTypeOptions = ['arrival','bloom','sale','tip','event']
+    .map(t => `<option value="${t}">${BADGE_LABELS[t]}</option>`).join('');
 
   const mapSection = n.lat ? `
     <div class="detail-card">
@@ -61,9 +64,7 @@ export function renderDetail(n) {
       <div class="detail-hero-body">
         <div class="detail-tags">
           <span class="ntag">${n.type}</span>
-          ${n.userAdded
-            ? '<span class="ntag community">Community Added</span>'
-            : '<span class="ntag" style="background:#e8f4e8;color:#2a5e2a">✓ Verified Listing</span>'}
+          <span class="ntag" style="background:#e8f4e8;color:#2a5e2a">✓ Verified Listing</span>
         </div>
         <div class="detail-hero-top">
           <div style="flex:1">
@@ -79,7 +80,7 @@ export function renderDetail(n) {
               </div>` : ''}
               ${n.website ? `<div class="detail-meta-row">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>
-                <a href="${n.website}" target="_blank">${n.website.replace('https://', '')}</a>
+                <a href="${n.website}" target="_blank">${n.website.replace('https://','')}</a>
               </div>` : ''}
               <div class="detail-meta-row">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -87,7 +88,7 @@ export function renderDetail(n) {
               </div>
               ${(n.instagram || n.facebook) ? `<div class="detail-meta-row social-row">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                ${n.facebook ? `<a href="${n.facebook}" target="_blank" class="social-link">Facebook</a>` : ''}
+                ${n.facebook  ? `<a href="${n.facebook}"  target="_blank" class="social-link">Facebook</a>`  : ''}
                 ${n.instagram ? `<a href="${n.instagram}" target="_blank" class="social-link">Instagram</a>` : ''}
               </div>` : ''}
             </div>
@@ -110,16 +111,27 @@ export function renderDetail(n) {
       <div>
         <div class="detail-card">
           <div class="detail-card-title">About</div>
-          <p class="detail-desc">${n.desc}</p>
+          <p class="detail-desc">${n.desc || n.description}</p>
         </div>
         ${specs ? `<div class="detail-card">
           <div class="detail-card-title">Specialties</div>
           <div class="specialties">${specs}</div>
         </div>` : ''}
         <div class="detail-card">
-          <div class="detail-card-title" style="display:flex;align-items:center;gap:10px">
-            What's Good Now
-            <span class="wgn-live" style="font-size:.65rem">Community feed</span>
+          <div class="detail-card-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span style="display:flex;align-items:center;gap:10px">
+              What's Good Now
+              <span class="wgn-live" style="font-size:.65rem">Community feed</span>
+            </span>
+            <button class="add-update-btn" onclick="this.closest('.detail-card').querySelector('.post-form').classList.toggle('open')">+ Add update</button>
+          </div>
+          <div class="post-form">
+            <select id="pu-type">${postTypeOptions}</select>
+            <textarea id="pu-text" placeholder="What's happening here? (arrivals, blooms, sales, tips…)"></textarea>
+            <div class="post-form-actions">
+              <button class="post-submit-btn" onclick="submitFeedPost('${n.id}')">Submit update</button>
+              <span class="post-note">Posts are reviewed before appearing.</span>
+            </div>
           </div>
           ${feedHTML}
         </div>
@@ -146,7 +158,7 @@ export function renderDetail(n) {
   injectNurserySchema(n);
   setMeta(
     `${n.name} — LocallyGreen Dayton`,
-    `${n.type} in ${n.city}, Ohio. ${n.desc.slice(0, 140)}…`,
+    `${n.type} in ${n.city}, Ohio. ${(n.desc || n.description || '').slice(0, 140)}…`,
     `https://locallygreen.com/dayton/${n.slug}`
   );
 }

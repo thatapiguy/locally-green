@@ -1,6 +1,8 @@
-import { state, all, save } from './state.js';
+import { state, all } from './state.js';
+import { db } from './supabase.js';
 import { renderGrid } from './grid.js';
 import { renderMap } from './map.js';
+import { BADGE_LABELS } from './data.js';
 
 export function switchView(v) {
   state.currentView = v;
@@ -16,29 +18,52 @@ export async function submitListing() {
   const city = document.getElementById('f-city').value.trim();
   const type = document.getElementById('f-type').value;
   if (!name || !city || !type) { showToast('Please fill in Name, City, and Type.', true); return; }
-  const slug  = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  const entry = {
-    id:       'u' + Date.now(),
-    slug, name, city,
-    address:  document.getElementById('f-addr').value.trim()  || city + ', OH',
+
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  const { error } = await db.from('nurseries').insert({
+    slug, name, city, state: 'OH',
+    address:     document.getElementById('f-addr').value.trim()  || null,
     type,
-    phone:    document.getElementById('f-phone').value.trim(),
-    website:  document.getElementById('f-web').value.trim(),
-    desc:     document.getElementById('f-desc').value.trim()  || 'Community-submitted location.',
+    phone:       document.getElementById('f-phone').value.trim() || null,
+    website:     document.getElementById('f-web').value.trim()   || null,
+    description: document.getElementById('f-desc').value.trim()  || null,
     specialties: [],
-    hours:    { Mon: '–', Tue: '–', Wed: '–', Thu: '–', Fri: '–', Sat: '–', Sun: '–' },
-    lat:      39.758  + (Math.random() - .5) * .09,
-    lng:      -84.192 + (Math.random() - .5) * .13,
-    userAdded: true,
-  };
-  state.userEntries.push(entry);
-  await save();
+    status: 'pending',
+  });
+
+  if (error) { showToast('Something went wrong. Please try again.', true); return; }
+
   document.getElementById('overlay').classList.remove('open');
-  ['f-name', 'f-city', 'f-addr', 'f-phone', 'f-web', 'f-desc'].forEach(id => document.getElementById(id).value = '');
+  ['f-name','f-city','f-addr','f-phone','f-web','f-desc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
   document.getElementById('f-type').value = '';
-  if (state.currentView === 'grid') renderGrid(); else renderMap();
-  showToast('🌿 Location added — thank you!');
-  document.getElementById('stat-total').textContent = all().length;
+  showToast('Thanks! Your listing will appear after review.');
+}
+
+export async function submitFeedPost(nurseryId) {
+  const typeEl = document.getElementById('pu-type');
+  const textEl = document.getElementById('pu-text');
+  const type   = typeEl?.value || 'tip';
+  const text   = textEl?.value.trim() || '';
+  if (!text) { showToast('Please write your update.', true); return; }
+
+  const { error } = await db.from('feed_posts').insert({
+    nursery_id:  nurseryId,
+    type,
+    badge:       BADGE_LABELS[type] || type,
+    text,
+    source:      'Community tip',
+    source_type: 'community',
+    status:      'pending',
+  });
+
+  if (error) { showToast('Something went wrong. Please try again.', true); return; }
+
+  if (textEl) textEl.value = '';
+  document.querySelector('.post-form')?.classList.remove('open');
+  showToast('Thanks! Your update will appear after review.');
 }
 
 export function sharePage(title) {

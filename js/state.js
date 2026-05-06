@@ -1,6 +1,8 @@
-// Single mutable state object — all modules import and mutate this reference
+import { db } from './supabase.js';
+
 export const state = {
-  userEntries:    [],
+  nurseries:      [],
+  feed:           [],
   activeFilter:   'all',
   searchTerm:     '',
   currentView:    'map',
@@ -9,42 +11,36 @@ export const state = {
   activeMarkerId: null,
 };
 
-export const STORAGE_KEY = 'lg-dayton-v1';
-
-let SEED     = [];
-let WGN_SEED = [];
-
-export function setSeedData(nurseries, feed) {
-  SEED     = nurseries;
-  WGN_SEED = feed;
-}
-
-export function getWGNSeed() { return WGN_SEED; }
-
 export async function load() {
-  try {
-    const r = await window.storage?.get(STORAGE_KEY);
-    if (r?.value) state.userEntries = JSON.parse(r.value);
-  } catch {}
+  const [{ data: nurseries, error: ne }, { data: feed, error: fe }] = await Promise.all([
+    db.from('nurseries')
+      .select('*')
+      .eq('status', 'verified')
+      .order('name'),
+    db.from('feed_posts')
+      .select('*, nurseries(name, slug)')
+      .eq('status', 'visible')
+      .order('created_at', { ascending: false })
+      .limit(30),
+  ]);
+  if (ne || fe) throw new Error(ne?.message || fe?.message);
+  // normalise description → desc so existing render code keeps working
+  state.nurseries = (nurseries || []).map(n => ({ ...n, desc: n.description }));
+  state.feed      = feed || [];
 }
 
-export async function save() {
-  try {
-    await window.storage?.set(STORAGE_KEY, JSON.stringify(state.userEntries));
-  } catch {}
-}
-
-export function all() { return [...SEED, ...state.userEntries]; }
+export function all()      { return state.nurseries; }
+export function getWGNSeed() { return state.feed; }
 
 export function filtered() {
-  return all().filter(n => {
+  return state.nurseries.filter(n => {
     const q  = state.searchTerm.toLowerCase();
-    const ms = !q ||
-      n.name.toLowerCase().includes(q) ||
-      n.city.toLowerCase().includes(q) ||
-      (n.desc || '').toLowerCase().includes(q) ||
-      n.type.toLowerCase().includes(q) ||
-      (n.specialties || []).join(' ').toLowerCase().includes(q);
+    const ms = !q
+      || n.name.toLowerCase().includes(q)
+      || n.city.toLowerCase().includes(q)
+      || (n.description || '').toLowerCase().includes(q)
+      || n.type.toLowerCase().includes(q)
+      || (n.specialties || []).join(' ').toLowerCase().includes(q);
     const mf = state.activeFilter === 'all' || n.type === state.activeFilter;
     return ms && mf;
   });

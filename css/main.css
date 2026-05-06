@@ -557,6 +557,39 @@ main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .feed-text { font-size: .87rem; color: var(--bark); line-height: 1.55; }
 .feed-meta { font-size: .72rem; color: var(--text3); margin-top: 5px; display: flex; gap: 10px; }
 
+/* ── POST AN UPDATE form (detail page) ── */
+.add-update-btn {
+  font-size: .72rem; font-weight: 600; font-family: inherit;
+  background: var(--mist); color: var(--fern);
+  border: 1px solid #c4dfc4; border-radius: 100px;
+  padding: 4px 12px; cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.add-update-btn:hover { background: var(--fern); color: #fff; border-color: var(--fern); }
+
+.post-form {
+  display: none; flex-direction: column; gap: 10px;
+  background: var(--cream); border-radius: 10px;
+  padding: 14px; margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+.post-form.open { display: flex; }
+.post-form select, .post-form textarea {
+  font-family: inherit; font-size: .84rem;
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; background: var(--white); color: var(--bark);
+  outline: none; appearance: none; transition: border-color .18s;
+}
+.post-form select:focus, .post-form textarea:focus { border-color: var(--fern); }
+.post-form textarea { resize: vertical; min-height: 72px; }
+.post-form-actions { display: flex; align-items: center; gap: 12px; }
+.post-submit-btn {
+  font-family: inherit; font-size: .82rem; font-weight: 600;
+  background: var(--moss); color: #fff; border: none;
+  border-radius: 8px; padding: 8px 16px; cursor: pointer; transition: background .15s;
+}
+.post-submit-btn:hover { background: var(--fern); }
+.post-note { font-size: .72rem; color: var(--text3); }
+
 /* Social links */
 .social-link {
   color: var(--fern);
