@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">LocallyGreen — Dayton's Local Nursery Directory</title>
+<meta id="page-desc" name="description" content="Find the best local nurseries, greenhouses, and garden centers in Dayton, Ohio. Community-maintained, always fresh.">
+<meta property="og:site_name" content="LocallyGreen">
+<meta id="og-title" property="og:title" content="LocallyGreen Dayton">
+<meta id="og-desc" property="og:description" content="Dayton's community nursery directory">
+<meta property="og:type" content="website">
+<link rel="canonical" id="canonical" href="https://locallygreen.com/dayton">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<!-- JSON-LD injected dynamically by router -->
+<script id="json-ld" type="application/ld+json"></script>
+
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <a class="logo" href="#/dayton" onclick="navigate('/dayton')">
+    <div class="logo-leaf"></div>
+    LocallyGreen
+  </a>
+  <a class="nav-city" href="#/dayton" onclick="navigate('/dayton')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Dayton, OH
+  </a>
+  <div class="nav-spacer"></div>
+  <button class="nav-btn outline" onclick="document.getElementById('overlay').classList.add('open')">+ Add listing</button>
+</nav>
+
+<!-- PAGES -->
+<main>
+
+  <!-- ══ CITY PAGE ══ -->
+  <div class="page active" id="page-city">
+
+    <!-- Hero -->
+    <div class="city-hero">
+      <div class="city-hero-inner">
+        <div class="city-eyebrow">Miami Valley · Ohio</div>
+        <h1>Dayton's <em>Local</em><br>Plant Community</h1>
+        <p>The community-maintained guide to nurseries, greenhouses, and garden centers across the Dayton metro. Always fresh — because gardeners keep it that way.</p>
+        <div class="city-stats">
+          <div class="city-stat">
+            <div class="city-stat-num" id="stat-total">9</div>
+            <div class="city-stat-lbl">Locations</div>
+          </div>
+          <div class="city-stat">
+            <div class="city-stat-num">6</div>
+            <div class="city-stat-lbl">Cities</div>
+          </div>
+          <div class="city-stat">
+            <div class="city-stat-num" id="stat-zone">5b</div>
+            <div class="city-stat-lbl">USDA Zone</div>
+          </div>
+          <div class="city-stat">
+            <div class="city-stat-num">Free</div>
+            <div class="city-stat-lbl">Always</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's Good Now -->
+    <div class="wgn-section">
+      <div class="wgn-inner">
+        <div class="wgn-header">
+          <div class="wgn-title">What's Good Now</div>
+          <div class="wgn-live">Live from Dayton</div>
+        </div>
+        <div class="wgn-scroll" id="wgn-feed"></div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="dir-toolbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search" type="search" placeholder="Search nurseries, cities, specialties…">
+      </div>
+      <div class="pills">
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="Garden Center">Garden Center</button>
+        <button class="pill" data-filter="Greenhouse">Greenhouse</button>
+        <button class="pill" data-filter="Nursery">Nursery</button>
+        <button class="pill" data-filter="Wholesale">Wholesale</button>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-grid">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Grid
+        </button>
+        <button class="view-btn" id="btn-map">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Map
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid view -->
+    <div class="grid-view" id="grid-view">
+      <div class="dir-body">
+        <p class="dir-meta" id="dir-meta"></p>
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+    <!-- Map view -->
+    <div class="map-view hidden" id="map-view">
+      <div style="flex:1;position:relative">
+        <div id="map"></div>
+        <div class="map-legend">
+          <h4>Type</h4>
+          <div class="leg-item"><div class="leg-dot" style="background:#b85c30"></div>Garden Center</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#5a9b6b"></div>Greenhouse</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#3d6b4a"></div>Nursery</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#d4924a"></div>Wholesale</div>
+        </div>
+      </div>
+      <div class="map-sidebar">
+        <div class="sidebar-hd">
+          <h3>Locations</h3>
+          <p id="map-meta">– shown</p>
+        </div>
+        <div class="map-list" id="map-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /page-city -->
+
+
+  <!-- ══ DETAIL PAGE ══ -->
+  <div class="page" id="page-detail">
+    <div class="detail-page" id="detail-content"></div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">LocallyGreen</div>
+        <div class="footer-tagline">A community-maintained guide to local plant shops, nurseries, and garden centers — city by city.</div>
+      </div>
+      <div class="footer-cities">
+        <h4>Cities</h4>
+        <a href="#/dayton" class="active" onclick="navigate('/dayton')">Dayton</a>
+        <a class="coming">Columbus</a>
+        <a class="coming">Cincinnati</a>
+        <a class="coming">Cleveland</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LocallyGreen — Community-contributed data. Verify hours before visiting.</span>
+      <span>Map © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ADD LISTING MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2>Add a Nursery</h2>
+    <p class="modal-sub">Know a great local spot? Add it to the Dayton directory.</p>
+    <div class="fg"><label>Business name *</label><input id="f-name" type="text" placeholder="e.g. Sunshine Gardens"></div>
+    <div class="frow">
+      <div class="fg"><label>City *</label><input id="f-city" type="text" placeholder="Dayton"></div>
+      <div class="fg"><label>Type *</label>
+        <select id="f-type"><option value="">Select…</option><option>Garden Center</option><option>Nursery</option><option>Greenhouse</option><option>Wholesale</option></select>
+      </div>
+    </div>
+    <div class="fg"><label>Address</label><input id="f-addr" type="text" placeholder="123 Main St, Dayton, OH 45XXX"></div>
+    <div class="frow">
+      <div class="fg"><label>Phone</label><input id="f-phone" type="tel" placeholder="(937) 555-0100"></div>
+      <div class="fg"><label>Website</label><input id="f-web" type="url" placeholder="https://…"></div>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="f-desc" placeholder="What makes this place special?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel-m" onclick="document.getElementById('overlay').classList.remove('open')">Cancel</button>
+      <button class="btn-submit-m" onclick="submitListing()">Submit Location</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg"></span>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

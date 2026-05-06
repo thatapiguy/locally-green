@@ -1,0 +1,56 @@
+[
+  {
+    "type": "arrival",
+    "badge": "Arrival",
+    "nursery": "Stockslager's",
+    "text": "Fresh Japanese maples just unloaded — Bloodgood and Emperor I varieties. Limited quantities.",
+    "time": "2h ago",
+    "source": "Owner post",
+    "sourceType": "owner"
+  },
+  {
+    "type": "sale",
+    "badge": "Sale",
+    "nursery": "Siebenthaler's",
+    "text": "End-of-season perennials 40% off this weekend only. Great time to fill in fall gaps.",
+    "time": "5h ago",
+    "source": "Community tip",
+    "sourceType": "community"
+  },
+  {
+    "type": "bloom",
+    "badge": "In Bloom",
+    "nursery": "North Dayton GC",
+    "text": "Knockout roses are going off right now — huge flush of blooms, best I've seen in years.",
+    "time": "Yesterday",
+    "source": "Community tip",
+    "sourceType": "community"
+  },
+  {
+    "type": "arrival",
+    "badge": "Arrival",
+    "nursery": "A. Brown & Sons",
+    "text": "Native Ohio wildflower plugs available — wild bergamot, coneflower, black-eyed Susan mix.",
+    "time": "2 days ago",
+    "source": "r/Dayton",
+    "sourceType": "reddit"
+  },
+  {
+    "type": "tip",
+    "badge": "Tip",
+    "nursery": "Knollwood",
+    "text": "If you're looking for fall mums, go Tuesday morning — that's when the fresh flats come in.",
+    "time": "3 days ago",
+    "source": "Community tip",
+    "sourceType": "community"
+  },
+  {
+    "type": "bloom",
+    "badge": "In Bloom",
+    "nursery": "Grandma's Gardens",
+    "text": "The ornamental grasses section is stunning right now — Miscanthus and Karl Foerster in full plume.",
+    "time": "4 days ago",
+    "source": "Community tip",
+    "sourceType": "community"
+  }
+]

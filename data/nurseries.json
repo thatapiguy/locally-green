@@ -1,0 +1,155 @@
+[
+  {
+    "id": "s1",
+    "slug": "north-dayton-garden-center",
+    "name": "North Dayton Garden Center & Nursery",
+    "city": "Dayton",
+    "address": "2101 Wagner Ford Rd, Dayton, OH 45414",
+    "type": "Garden Center",
+    "phone": "(937) 274-1154",
+    "website": "https://northdaytongarden.com",
+    "desc": "Family-owned since 1963, North Dayton Garden Center carries over 5,000 plant varieties and is home to Dayton's largest selection of homegrown houseplants and bonsai trees. Owner Pete Kossoudji has cultivated a reputation for unusual annuals, quality vegetables, and rare perennials that you simply won't find at box stores.",
+    "specialties": ["Bonsai", "Houseplants", "Annuals", "Vegetables", "Perennials", "Native Plants"],
+    "hours": {
+      "Mon": "9am–6pm", "Tue": "9am–6pm", "Wed": "9am–6pm",
+      "Thu": "9am–6pm", "Fri": "9am–6pm", "Sat": "9am–5pm", "Sun": "10am–4pm"
+    },
+    "lat": 39.8233, "lng": -84.1925, "userAdded": false
+  },
+  {
+    "id": "s2",
+    "slug": "stockslagers-greenhouse",
+    "name": "Stockslager's Greenhouse & Garden Center",
+    "city": "New Lebanon",
+    "address": "14037 Dayton Eaton Pike, New Lebanon, OH 45345",
+    "type": "Greenhouse",
+    "phone": "(937) 687-1012",
+    "website": "https://www.stockslagers.com",
+    "desc": "A family-owned destination spanning more than 9 acres of indoor and outdoor growing space. Open year-round with spring bedding plants, fall mums, and Christmas poinsettias. The team hosts a weekly gardening advice radio segment every Wednesday at 9:30am — a beloved institution among Miami Valley gardeners.",
+    "specialties": ["Bedding Plants", "Fall Mums", "Poinsettias", "Vegetables", "Shrubs", "Bulk Supplies"],
+    "hours": {
+      "Mon": "9am–5pm", "Tue": "9am–5pm", "Wed": "9am–5pm",
+      "Thu": "9am–5pm", "Fri": "9am–5pm", "Sat": "9am–5pm", "Sun": "10am–4pm"
+    },
+    "lat": 39.7403, "lng": -84.3988, "userAdded": false
+  },
+  {
+    "id": "s3",
+    "slug": "siebenthaler-garden-centers",
+    "name": "Siebenthaler's Garden Centers",
+    "city": "Centerville",
+    "address": "6000 Far Hills Ave, Centerville, OH 45459",
+    "type": "Garden Center",
+    "phone": "(937) 434-1326",
+    "website": "https://www.siebenthaler.com",
+    "desc": "With over 150 years of continuous service in the Dayton area, Siebenthaler's is the region's most storied garden center. They grow most of their own plants on a 250-acre Beavercreek nursery farm, ensuring stock is fully acclimated to southwest Ohio's soil and weather. Full landscape design and installation services available.",
+    "specialties": ["Trees", "Shrubs", "Perennials", "Landscape Design", "Local Grown", "Annuals"],
+    "hours": {
+      "Mon": "9am–5pm", "Tue": "9am–5pm", "Wed": "9am–5pm",
+      "Thu": "9am–5pm", "Fri": "9am–5pm", "Sat": "9am–5pm", "Sun": "11am–5pm"
+    },
+    "lat": 39.6268, "lng": -84.1498, "userAdded": false
+  },
+  {
+    "id": "s4",
+    "slug": "a-brown-sons-nursery",
+    "name": "A. Brown & Sons Nursery",
+    "city": "Brookville",
+    "address": "11506 N Dayton-Greenville Pike, Brookville, OH 45309",
+    "type": "Nursery",
+    "phone": "(937) 833-4500",
+    "website": "https://www.brownsnursery.com",
+    "desc": "A 22-acre nursery with 65+ years of growing expertise in shade and ornamental trees, evergreens, shrubs, and select perennials. The Brown family opened to the public in the 1980s and now welcomes homeowners every Friday through Sunday alongside their wholesale and re-wholesaler business.",
+    "specialties": ["Shade Trees", "Ornamental Trees", "Evergreens", "Shrubs", "Wholesale", "Landscaping"],
+    "hours": {
+      "Mon": "Closed", "Tue": "Closed", "Wed": "Closed",
+      "Thu": "Closed", "Fri": "8am–5pm", "Sat": "8am–5pm", "Sun": "10am–4pm"
+    },
+    "lat": 39.849, "lng": -84.4145, "userAdded": false
+  },
+  {
+    "id": "s5",
+    "slug": "knollwood-garden-center",
+    "name": "Knollwood Garden Center",
+    "city": "Dayton",
+    "address": "4185 Far Hills Ave, Dayton, OH 45429",
+    "type": "Garden Center",
+    "phone": "(937) 293-5671",
+    "website": "",
+    "desc": "A well-regarded local garden center and landscaping company serving the south Dayton area with a strong selection of annuals, perennials, shrubs, and trees. Knollwood offers landscape design and installation services for residential and commercial clients.",
+    "specialties": ["Annuals", "Perennials", "Shrubs", "Trees", "Landscape Design"],
+    "hours": {
+      "Mon": "9am–6pm", "Tue": "9am–6pm", "Wed": "9am–6pm",
+      "Thu": "9am–6pm", "Fri": "9am–6pm", "Sat": "9am–5pm", "Sun": "10am–4pm"
+    },
+    "lat": 39.6838, "lng": -84.1667, "userAdded": false
+  },
+  {
+    "id": "s6",
+    "slug": "grandmas-gardens",
+    "name": "Grandma's Gardens & Landscape",
+    "city": "Waynesville",
+    "address": "Waynesville, OH 45068",
+    "type": "Garden Center",
+    "phone": "",
+    "website": "",
+    "desc": "A 14-acre full-service garden center halfway between Dayton and Cincinnati. A beloved destination for plant lovers across the Miami Valley, with an emphasis on seasonal color and container gardens.",
+    "specialties": ["Seasonal Color", "Containers", "Shrubs", "Perennials", "Landscape"],
+    "hours": {
+      "Mon": "9am–5pm", "Tue": "9am–5pm", "Wed": "9am–5pm",
+      "Thu": "9am–5pm", "Fri": "9am–5pm", "Sat": "9am–5pm", "Sun": "Closed"
+    },
+    "lat": 39.5354, "lng": -84.0842, "userAdded": false
+  },
+  {
+    "id": "s7",
+    "slug": "shademakers-nursery",
+    "name": "Shademakers Nursery & Landscape",
+    "city": "Dayton",
+    "address": "Dayton, OH",
+    "type": "Nursery",
+    "phone": "",
+    "website": "",
+    "desc": "An extensive selection of trees, shrubs, perennials, annuals, and herbs grown on their own farm. Shademakers opens a seasonal Christmas shop starting in November, carrying wreaths, trees, and poinsettias.",
+    "specialties": ["Trees", "Shrubs", "Perennials", "Herbs", "Christmas Trees"],
+    "hours": {
+      "Mon": "9am–5pm", "Tue": "9am–5pm", "Wed": "9am–5pm",
+      "Thu": "9am–5pm", "Fri": "9am–5pm", "Sat": "9am–5pm", "Sun": "Closed"
+    },
+    "lat": 39.7295, "lng": -84.2422, "userAdded": false
+  },
+  {
+    "id": "s8",
+    "slug": "berns-garden-center",
+    "name": "Berns Garden Center",
+    "city": "Dayton",
+    "address": "Dayton, OH",
+    "type": "Garden Center",
+    "phone": "",
+    "website": "",
+    "desc": "A popular local garden center frequently recommended by Dayton-area gardeners for its plant selection and knowledgeable staff. A neighborhood staple.",
+    "specialties": ["Annuals", "Perennials", "Vegetables", "Houseplants"],
+    "hours": {
+      "Mon": "9am–6pm", "Tue": "9am–6pm", "Wed": "9am–6pm",
+      "Thu": "9am–6pm", "Fri": "9am–6pm", "Sat": "9am–5pm", "Sun": "10am–3pm"
+    },
+    "lat": 39.7591, "lng": -84.195, "userAdded": false
+  },
+  {
+    "id": "s9",
+    "slug": "andys-garden",
+    "name": "Andy's Garden",
+    "city": "Dayton",
+    "address": "Dayton, OH",
+    "type": "Garden Center",
+    "phone": "",
+    "website": "",
+    "desc": "Garden center, flower shop, and gift shop in one. Over 2 acres of greenhouses with 90% of plants grown on-site. Known for a strong selection of houseplants, trees, annuals, perennials, roses, herbs, and vegetables.",
+    "specialties": ["Houseplants", "Roses", "Annuals", "Perennials", "Gift Shop", "Flowers"],
+    "hours": {
+      "Mon": "9am–6pm", "Tue": "9am–6pm", "Wed": "9am–6pm",
+      "Thu": "9am–6pm", "Fri": "9am–6pm", "Sat": "9am–5pm", "Sun": "11am–4pm"
+    },
+    "lat": 39.752, "lng": -84.156, "userAdded": false
+  }
+]
