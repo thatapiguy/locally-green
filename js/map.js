@@ -48,7 +48,7 @@ export function renderMap() {
   renderMapList(data);
   document.getElementById('map-meta').textContent =
     `${state.markers.length} location${state.markers.length !== 1 ? 's' : ''} shown`;
-  setTimeout(() => state.mapInstance.invalidateSize(), 60);
+  setTimeout(() => state.mapInstance.invalidateSize(), 200);
 }
 
 export function renderMapList(data) {
