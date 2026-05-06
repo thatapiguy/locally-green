@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">LocallyGreen — Dayton's Local Nursery Directory</title>
+<meta id="page-desc" name="description" content="Find the best local nurseries, greenhouses, and garden centers in Dayton, Ohio. Community-maintained, always fresh.">
+<meta property="og:site_name" content="LocallyGreen">
+<meta id="og-title" property="og:title" content="LocallyGreen Dayton">
+<meta id="og-desc" property="og:description" content="Dayton's community nursery directory">
+<meta property="og:type" content="website">
+<link rel="canonical" id="canonical" href="https://locallygreen.com/dayton">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<!-- JSON-LD injected dynamically by router -->
+<script id="json-ld" type="application/ld+json"></script>
+
+<style>
+:root {
+  --moss:   #1f3320;
+  --fern:   #3d6b4a;
+  --sage:   #7da882;
+  --mist:   #d8ebd4;
+  --cream:  #f6f1e9;
+  --parch:  #ede8df;
+  --terra:  #b85c30;
+  --amber:  #d4924a;
+  --bark:   #2e2016;
+  --white:  #fdfcf8;
+  --border: #ddd7cc;
+  --text2:  #6b5e52;
+  --text3:  #9e9186;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--bark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── SITE NAV ── */
+.site-nav {
+  background: var(--moss);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  flex-shrink: 0;
+}
+.logo {
+  font-family: 'Lora', serif;
+  font-size: 1.15rem;
+  color: var(--white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -.01em;
+}
+.logo-leaf {
+  width: 22px; height: 22px;
+  background: var(--sage);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.logo-leaf::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--moss);
+  border-radius: 50%;
+}
+.nav-city {
+  font-size: .8rem;
+  color: var(--sage);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: background .15s;
+  text-decoration: none;
+}
+.nav-city:hover { background: rgba(255,255,255,.08); }
+.nav-city svg { opacity: .6; }
+.nav-spacer { flex: 1; }
+.nav-btn {
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: .8rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+}
+.nav-btn.outline {
+  background: transparent;
+  color: var(--sage);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.nav-btn.outline:hover { background: rgba(255,255,255,.08); color: var(--white); }
+.nav-btn.fill {
+  background: var(--terra);
+  color: #fff;
+}
+.nav-btn.fill:hover { background: #9f4d27; }
+
+/* ── MAIN ── */
+main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.page { display: none; flex-direction: column; flex: 1; }
+.page.active { display: flex; }
+
+/* ── CITY HERO ── */
+.city-hero {
+  background: var(--moss);
+  padding: 56px 28px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.city-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 4 Q46 28 64 32 Q46 36 40 60 Q34 36 16 32 Q34 28 40 4Z' fill='%237da88215'/%3E%3C/svg%3E") repeat,
+    radial-gradient(ellipse 140% 60% at 30% 110%, #3d6b4a30 0%, transparent 55%);
+  pointer-events: none;
+}
+.city-hero-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  position: relative;
+}
+.city-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 16px;
+}
+.city-eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px; height: 1px;
+  background: var(--sage);
+}
+.city-hero h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 14px;
+  letter-spacing: -.02em;
+}
+.city-hero h1 em { font-style: italic; color: var(--amber); }
+.city-hero p {
+  color: var(--mist);
+  font-size: .97rem;
+  font-weight: 300;
+  max-width: 520px;
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+.city-stats {
+  display: flex;
+  gap: 0;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  overflow: hidden;
+  width: fit-content;
+}
+.city-stat {
+  padding: 14px 28px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.city-stat:last-child { border-right: none; }
+.city-stat-num {
+  font-family: 'Lora', serif;
+  font-size: 1.5rem;
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.city-stat-lbl {
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+/* ── WHAT'S GOOD NOW STRIP ── */
+.wgn-section {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 28px;
+}
+.wgn-inner { max-width: 1080px; margin: 0 auto; }
+.wgn-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.wgn-title {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  color: var(--moss);
+}
+.wgn-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--terra);
+}
+.wgn-live::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--terra);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+.wgn-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.wgn-scroll::-webkit-scrollbar { display: none; }
+.wgn-card {
+  flex-shrink: 0;
+  width: 260px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color .18s, transform .18s;
+}
+.wgn-card:hover { border-color: var(--sage); transform: translateY(-2px); }
+.wgn-card-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+}
+.wgn-badge {
+  font-size: .63rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.badge-arrival { background: #e0f0e0; color: #2a5e2a; }
+.badge-bloom   { background: #fce8d8; color: #8c3d10; }
+.badge-sale    { background: #fef3dc; color: #7a4f0a; }
+.badge-tip     { background: #e4edf8; color: #1e4c80; }
+.badge-owner   { background: #f0e8f8; color: #5a2a8c; }
+.wgn-time { font-size: .7rem; color: var(--text3); margin-left: auto; }
+.wgn-nursery {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--fern);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.wgn-text { font-size: .87rem; color: var(--bark); line-height: 1.5; }
+.wgn-source {
+  margin-top: 10px;
+  font-size: .7rem;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── DIRECTORY TOOLBAR ── */
+.dir-toolbar {
+  position: sticky; top: 52px; z-index: 200;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+.search-wrap { flex: 1; min-width: 180px; position: relative; }
+.search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #aaa; pointer-events: none; }
+.search-wrap input {
+  width: 100%; padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: inherit; font-size: .87rem;
+  background: var(--cream); outline: none;
+  transition: border-color .18s;
+}
+.search-wrap input:focus { border-color: var(--fern); }
+.pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  padding: 6px 13px; border-radius: 100px;
+  font-size: .76rem; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--text2);
+  transition: all .15s; font-family: inherit;
+}
+.pill.active, .pill:hover { background: var(--moss); color: #fff; border-color: var(--moss); }
+.view-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.view-btn {
+  padding: 7px 13px; background: transparent; border: none; cursor: pointer;
+  font-family: inherit; font-size: .78rem; font-weight: 500; color: var(--text2);
+  display: flex; align-items: center; gap: 5px; transition: all .15s;
+}
+.view-btn.active { background: var(--moss); color: #fff; }
+.view-btn + .view-btn { border-left: 1px solid var(--border); }
+.view-btn:not(.active):hover { background: var(--parch); }
+
+/* ── DIRECTORY BODY ── */
+.dir-body { max-width: 1080px; margin: 0 auto; width: 100%; padding: 28px 28px 72px; }
+.dir-meta { font-size: .77rem; color: var(--text3); margin-bottom: 20px; font-weight: 500; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+
+/* ── NURSERY CARD ── */
+.ncard {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  cursor: pointer;
+  transition: box-shadow .22s, transform .22s;
+  animation: fadeUp .38s ease both;
+  text-decoration: none;
+  color: inherit;
+}
+.ncard:hover { box-shadow: 0 10px 36px rgba(31,51,32,.13); transform: translateY(-3px); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+.ncard-accent { height: 4px; }
+.ncard-body { padding: 18px; flex: 1; }
+.ncard-tags { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.ntag {
+  font-size: .66rem; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 100px;
+  background: var(--mist); color: var(--fern);
+}
+.ntag.community { background: #fde8d8; color: #8c3d10; }
+.ncard-name {
+  font-family: 'Lora', serif;
+  font-size: 1.12rem; color: var(--moss);
+  margin-bottom: 5px; line-height: 1.25;
+  font-weight: 600;
+}
+.ncard-addr {
+  font-size: .79rem; color: var(--text2); margin-bottom: 9px;
+  display: flex; align-items: flex-start; gap: 4px;
+}
+.ncard-addr svg { flex-shrink: 0; margin-top: 2px; }
+.ncard-desc { font-size: .84rem; color: #5a4e45; line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ncard-foot {
+  padding: 12px 18px;
+  border-top: 1px solid #f0ebe2;
+  display: flex; align-items: center; gap: 10px;
+}
+.ncard-link { font-size: .76rem; font-weight: 500; color: var(--fern); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+.ncard-cta {
+  margin-left: auto;
+  font-size: .75rem; font-weight: 600; color: var(--moss);
+  display: flex; align-items: center; gap: 3px;
+  letter-spacing: .02em;
+}
+
+/* ── MAP VIEW ── */
+.map-view { display: flex; flex: 1; height: calc(100vh - 130px); min-height: 480px; }
+.map-view.hidden, .grid-view.hidden { display: none; }
+#map { flex: 1; }
+.map-sidebar {
+  width: 300px; background: var(--white); border-left: 1px solid var(--border);
+  overflow-y: auto; flex-shrink: 0;
+}
+.sidebar-hd { padding: 14px 16px; border-bottom: 1px solid #f0ebe2; position: sticky; top: 0; background: var(--white); }
+.sidebar-hd h3 { font-family: 'Lora', serif; font-size: .97rem; color: var(--moss); }
+.sidebar-hd p { font-size: .72rem; color: var(--text3); margin-top: 2px; }
+.map-list { padding: 8px; }
+.map-item {
+  padding: 11px 12px; border-radius: 9px; cursor: pointer;
+  border: 1px solid transparent; transition: all .15s; margin-bottom: 5px;
+  display: flex; gap: 9px; align-items: flex-start;
+}
+.map-item:hover { background: var(--mist); border-color: var(--sage); }
+.map-item.active { background: var(--mist); border-color: var(--fern); }
+.map-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.map-item-name { font-family: 'Lora', serif; font-size: .88rem; color: var(--moss); font-weight: 600; margin-bottom: 2px; }
+.map-item-meta { font-size: .71rem; color: var(--text3); }
+
+/* ── NURSERY DETAIL PAGE ── */
+.detail-page { max-width: 1080px; margin: 0 auto; width: 100%; padding: 0 28px 80px; }
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 0;
+  font-size: .78rem;
+  color: var(--text3);
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--fern); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb svg { opacity: .4; }
+
+/* Detail hero */
+.detail-hero {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.detail-hero-accent { height: 5px; }
+.detail-hero-body { padding: 28px 32px; }
+.detail-hero-top { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+.detail-tags { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.detail-name {
+  font-family: 'Lora', serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--moss);
+  line-height: 1.15;
+  margin-bottom: 10px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+.detail-meta { display: flex; flex-direction: column; gap: 8px; }
+.detail-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .86rem;
+  color: var(--text2);
+}
+.detail-meta-row svg { color: var(--sage); flex-shrink: 0; }
+.detail-meta-row a { color: var(--fern); text-decoration: none; }
+.detail-meta-row a:hover { text-decoration: underline; }
+.detail-actions {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.action-btn {
+  padding: 9px 20px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: .84rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.action-btn.primary { background: var(--moss); color: #fff; }
+.action-btn.primary:hover { background: var(--fern); }
+.action-btn.secondary { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+.action-btn.secondary:hover { background: var(--parch); }
+
+/* Detail grid */
+.detail-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+@media (max-width: 760px) { .detail-grid { grid-template-columns: 1fr; } }
+
+/* About card */
+.detail-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.detail-card-title {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  color: var(--moss);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0ebe2;
+}
+.detail-desc {
+  font-size: .9rem;
+  color: #5a4e45;
+  line-height: 1.75;
+}
+.specialties { display: flex; gap: 8px; flex-wrap: wrap; }
+.spec-tag {
+  padding: 6px 13px;
+  border-radius: 100px;
+  background: var(--mist);
+  color: var(--fern);
+  font-size: .78rem;
+  font-weight: 500;
+  border: 1px solid #c4dfc4;
+}
+
+/* Hours table */
+.hours-table { width: 100%; font-size: .85rem; }
+.hours-table tr td { padding: 5px 0; }
+.hours-table tr td:first-child { color: var(--text2); font-weight: 500; width: 100px; }
+.hours-table tr td:last-child { color: var(--bark); }
+.hours-table tr.today td { color: var(--fern); font-weight: 600; }
+.open-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 100px;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: #e0f0e0;
+  color: #2a5e2a;
+  margin-left: 8px;
+}
+
+/* Map detail */
+#detail-map {
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* WGN detail */
+.feed-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #f0ebe2;
+  display: flex;
+  gap: 12px;
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-dot-col { padding-top: 4px; }
+.feed-dot-outer {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.feed-content {}
+.feed-badge-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+.feed-text { font-size: .87rem; color: var(--bark); line-height: 1.55; }
+.feed-meta { font-size: .72rem; color: var(--text3); margin-top: 5px; display: flex; gap: 10px; }
+
+/* ── EMPTY STATE ── */
+.empty { text-align: center; padding: 70px 20px; color: var(--text3); grid-column: 1/-1; }
+.empty h3 { font-family: 'Lora', serif; font-size: 1.25rem; color: #b5a89c; margin-bottom: 6px; }
+
+/* ── MODAL ── */
+.overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(20,12,5,.52); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity .22s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white); border-radius: 18px;
+  width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
+  padding: 32px; transform: translateY(18px); transition: transform .28s;
+}
+.overlay.open .modal { transform: none; }
+.modal h2 { font-family: 'Lora', serif; font-size: 1.4rem; color: var(--moss); margin-bottom: 5px; }
+.modal-sub { font-size: .83rem; color: var(--text2); margin-bottom: 22px; }
+.fg { margin-bottom: 15px; }
+.fg label { display: block; font-size: .74rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text2); margin-bottom: 5px; }
+.fg input, .fg textarea, .fg select {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--border); border-radius: 9px;
+  font-family: inherit; font-size: .87rem;
+  background: var(--cream); color: var(--bark);
+  outline: none; appearance: none; transition: border-color .18s;
+}
+.fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--fern); }
+.fg textarea { resize: vertical; min-height: 80px; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+.modal-actions button { font-family: inherit; font-size: .87rem; font-weight: 500; cursor: pointer; border-radius: 9px; padding: 11px 18px; border: none; transition: all .18s; }
+.btn-cancel-m { background: transparent; border: 1px solid var(--border) !important; color: var(--text2); }
+.btn-cancel-m:hover { background: var(--parch); }
+.btn-submit-m { flex: 1; background: var(--moss); color: #fff; }
+.btn-submit-m:hover { background: var(--fern); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 20px; z-index: 999;
+  background: var(--moss); color: #fff; padding: 12px 20px; border-radius: 10px;
+  font-size: .84rem; font-weight: 500; box-shadow: 0 6px 24px rgba(0,0,0,.18);
+  transform: translateY(70px); opacity: 0;
+  transition: all .32s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; gap: 7px;
+}
+.toast.show { transform: none; opacity: 1; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--moss);
+  color: var(--sage);
+  padding: 36px 28px;
+  flex-shrink: 0;
+}
+.footer-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.footer-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.footer-brand { font-family: 'Lora', serif; font-size: 1.1rem; color: var(--white); margin-bottom: 5px; }
+.footer-tagline { font-size: .78rem; color: var(--sage); max-width: 280px; line-height: 1.6; }
+.footer-cities h4 { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--sage); margin-bottom: 8px; }
+.footer-cities a {
+  display: inline-block; font-size: .83rem; color: var(--white); margin-right: 16px; margin-bottom: 5px;
+  text-decoration: none; opacity: .8; transition: opacity .15s;
+}
+.footer-cities a:hover { opacity: 1; }
+.footer-cities a.active { opacity: 1; font-weight: 600; }
+.footer-cities a.coming { opacity: .4; pointer-events: none; }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 16px;
+  font-size: .72rem;
+  color: var(--sage);
+  opacity: .7;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.footer-bottom a { color: inherit; text-decoration: none; }
+.footer-bottom a:hover { opacity: 1; }
+
+/* Map legend */
+.map-legend {
+  position: absolute; bottom: 22px; left: 12px; z-index: 500;
+  background: var(--white); border-radius: 9px; padding: 10px 13px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12); font-size: .74rem;
+  border: 1px solid var(--border);
+}
+.map-legend h4 { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); margin-bottom: 6px; }
+.leg-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: var(--text2); }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Popup */
+.leaflet-popup-content-wrapper { border-radius: 11px !important; padding: 0 !important; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.16) !important; font-family: 'DM Sans', sans-serif; }
+.leaflet-popup-content { margin: 0 !important; width: auto !important; }
+.leaflet-popup-tip { background: var(--white) !important; }
+.popup-acc { height: 3px; }
+.popup-in { padding: 13px 15px; }
+.popup-type { font-size: .63rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--fern); margin-bottom: 3px; }
+.popup-name { font-family: 'Lora', serif; font-size: .95rem; color: var(--moss); font-weight: 600; margin-bottom: 5px; line-height: 1.2; }
+.popup-addr { font-size: .73rem; color: var(--text2); margin-bottom: 8px; }
+.popup-view { font-size: .74rem; font-weight: 600; color: var(--fern); cursor: pointer; border: none; background: none; font-family: inherit; padding: 0; }
+.popup-view:hover { text-decoration: underline; }
+
+@media(max-width:600px){
+  .city-stats{flex-wrap:wrap}
+  .detail-actions{flex-direction:row;margin-left:0;margin-top:12px;width:100%}
+  .detail-hero-top{flex-direction:column}
+  .dir-toolbar{flex-direction:column;align-items:stretch}
+  .search-wrap{min-width:100%}
+  .map-view{flex-direction:column}
+  .map-sidebar{width:100%;height:220px;border-left:none;border-top:1px solid var(--border)}
+  #map{height:300px}
+}
+</style>
+</head>
+<body>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <a class="logo" href="#/dayton" onclick="navigate('/dayton')">
+    <div class="logo-leaf"></div>
+    LocallyGreen
+  </a>
+  <a class="nav-city" href="#/dayton" onclick="navigate('/dayton')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Dayton, OH
+  </a>
+  <div class="nav-spacer"></div>
+  <button class="nav-btn outline" onclick="document.getElementById('overlay').classList.add('open')">+ Add listing</button>
+</nav>
+
+<!-- PAGES -->
+<main>
+
+  <!-- ══ CITY PAGE ══ -->
+  <div class="page active" id="page-city">
+
+    <!-- Hero -->
+    <div class="city-hero">
+      <div class="city-hero-inner">
+        <div class="city-eyebrow">Miami Valley · Ohio</div>
+        <h1>Dayton's <em>Local</em><br>Plant Community</h1>
+        <p>The community-maintained guide to nurseries, greenhouses, and garden centers across the Dayton metro. Always fresh — because gardeners keep it that way.</p>
+        <div class="city-stats">
+          <div class="city-stat">
+            <div class="city-stat-num" id="stat-total">9</div>
+            <div class="city-stat-lbl">Locations</div>
+          </div>
+          <div class="city-stat">
+            <div class="city-stat-num">6</div>
+            <div class="city-stat-lbl">Cities</div>
+          </div>
+          <div class="city-stat">
+            <div class="city-stat-num" id="stat-zone">5b</div>
+            <div class="city-stat-lbl">USDA Zone</div>
+          </div>
+          <div class="city-stat">
+            <div class="city-stat-num">Free</div>
+            <div class="city-stat-lbl">Always</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's Good Now -->
+    <div class="wgn-section">
+      <div class="wgn-inner">
+        <div class="wgn-header">
+          <div class="wgn-title">What's Good Now</div>
+          <div class="wgn-live">Live from Dayton</div>
+        </div>
+        <div class="wgn-scroll" id="wgn-feed"></div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="dir-toolbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search" type="search" placeholder="Search nurseries, cities, specialties…">
+      </div>
+      <div class="pills">
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="Garden Center">Garden Center</button>
+        <button class="pill" data-filter="Greenhouse">Greenhouse</button>
+        <button class="pill" data-filter="Nursery">Nursery</button>
+        <button class="pill" data-filter="Wholesale">Wholesale</button>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-grid">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Grid
+        </button>
+        <button class="view-btn" id="btn-map">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Map
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid view -->
+    <div class="grid-view" id="grid-view">
+      <div class="dir-body">
+        <p class="dir-meta" id="dir-meta"></p>
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+    <!-- Map view -->
+    <div class="map-view hidden" id="map-view">
+      <div style="flex:1;position:relative">
+        <div id="map"></div>
+        <div class="map-legend">
+          <h4>Type</h4>
+          <div class="leg-item"><div class="leg-dot" style="background:#b85c30"></div>Garden Center</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#5a9b6b"></div>Greenhouse</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#3d6b4a"></div>Nursery</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#d4924a"></div>Wholesale</div>
+        </div>
+      </div>
+      <div class="map-sidebar">
+        <div class="sidebar-hd">
+          <h3>Locations</h3>
+          <p id="map-meta">– shown</p>
+        </div>
+        <div class="map-list" id="map-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /page-city -->
+
+
+  <!-- ══ DETAIL PAGE ══ -->
+  <div class="page" id="page-detail">
+    <div class="detail-page" id="detail-content"></div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">LocallyGreen</div>
+        <div class="footer-tagline">A community-maintained guide to local plant shops, nurseries, and garden centers — city by city.</div>
+      </div>
+      <div class="footer-cities">
+        <h4>Cities</h4>
+        <a href="#/dayton" class="active" onclick="navigate('/dayton')">Dayton</a>
+        <a class="coming">Columbus</a>
+        <a class="coming">Cincinnati</a>
+        <a class="coming">Cleveland</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LocallyGreen — Community-contributed data. Verify hours before visiting.</span>
+      <span>Map © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ADD LISTING MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2>Add a Nursery</h2>
+    <p class="modal-sub">Know a great local spot? Add it to the Dayton directory.</p>
+    <div class="fg"><label>Business name *</label><input id="f-name" type="text" placeholder="e.g. Sunshine Gardens"></div>
+    <div class="frow">
+      <div class="fg"><label>City *</label><input id="f-city" type="text" placeholder="Dayton"></div>
+      <div class="fg"><label>Type *</label>
+        <select id="f-type"><option value="">Select…</option><option>Garden Center</option><option>Nursery</option><option>Greenhouse</option><option>Wholesale</option></select>
+      </div>
+    </div>
+    <div class="fg"><label>Address</label><input id="f-addr" type="text" placeholder="123 Main St, Dayton, OH 45XXX"></div>
+    <div class="frow">
+      <div class="fg"><label>Phone</label><input id="f-phone" type="tel" placeholder="(937) 555-0100"></div>
+      <div class="fg"><label>Website</label><input id="f-web" type="url" placeholder="https://…"></div>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="f-desc" placeholder="What makes this place special?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel-m" onclick="document.getElementById('overlay').classList.remove('open')">Cancel</button>
+      <button class="btn-submit-m" onclick="submitListing()">Submit Location</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────
+const TYPE_COLOR = {
+  'Garden Center':'#b85c30',
+  'Greenhouse':   '#5a9b6b',
+  'Nursery':      '#3d6b4a',
+  'Wholesale':    '#d4924a',
+};
+function tc(n){ return n.userAdded ? '#a0a0a0' : (TYPE_COLOR[n.type]||'#888'); }
+
+const SEED = [
+  {
+    id:'s1', slug:'north-dayton-garden-center',
+    name:"North Dayton Garden Center & Nursery",
+    city:"Dayton", address:"2101 Wagner Ford Rd, Dayton, OH 45414",
+    type:"Garden Center", phone:"(937) 274-1154",
+    website:"https://northdaytongarden.com",
+    desc:"Family-owned since 1963, North Dayton Garden Center carries over 5,000 plant varieties and is home to Dayton's largest selection of homegrown houseplants and bonsai trees. Owner Pete Kossoudji has cultivated a reputation for unusual annuals, quality vegetables, and rare perennials that you simply won't find at box stores.",
+    specialties:["Bonsai","Houseplants","Annuals","Vegetables","Perennials","Native Plants"],
+    hours:{Mon:"9am–6pm",Tue:"9am–6pm",Wed:"9am–6pm",Thu:"9am–6pm",Fri:"9am–6pm",Sat:"9am–5pm",Sun:"10am–4pm"},
+    lat:39.8233, lng:-84.1925, userAdded:false
+  },
+  {
+    id:'s2', slug:'stockslagers-greenhouse',
+    name:"Stockslager's Greenhouse & Garden Center",
+    city:"New Lebanon", address:"14037 Dayton Eaton Pike, New Lebanon, OH 45345",
+    type:"Greenhouse", phone:"(937) 687-1012",
+    website:"https://www.stockslagers.com",
+    desc:"A family-owned destination spanning more than 9 acres of indoor and outdoor growing space. Open year-round with spring bedding plants, fall mums, and Christmas poinsettias. The team hosts a weekly gardening advice radio segment every Wednesday at 9:30am — a beloved institution among Miami Valley gardeners.",
+    specialties:["Bedding Plants","Fall Mums","Poinsettias","Vegetables","Shrubs","Bulk Supplies"],
+    hours:{Mon:"9am–5pm",Tue:"9am–5pm",Wed:"9am–5pm",Thu:"9am–5pm",Fri:"9am–5pm",Sat:"9am–5pm",Sun:"10am–4pm"},
+    lat:39.7403, lng:-84.3988, userAdded:false
+  },
+  {
+    id:'s3', slug:'siebenthaler-garden-centers',
+    name:"Siebenthaler's Garden Centers",
+    city:"Centerville", address:"6000 Far Hills Ave, Centerville, OH 45459",
+    type:"Garden Center", phone:"(937) 434-1326",
+    website:"https://www.siebenthaler.com",
+    desc:"With over 150 years of continuous service in the Dayton area, Siebenthaler's is the region's most storied garden center. They grow most of their own plants on a 250-acre Beavercreek nursery farm, ensuring stock is fully acclimated to southwest Ohio's soil and weather. Full landscape design and installation services available.",
+    specialties:["Trees","Shrubs","Perennials","Landscape Design","Local Grown","Annuals"],
+    hours:{Mon:"9am–5pm",Tue:"9am–5pm",Wed:"9am–5pm",Thu:"9am–5pm",Fri:"9am–5pm",Sat:"9am–5pm",Sun:"11am–5pm"},
+    lat:39.6268, lng:-84.1498, userAdded:false
+  },
+  {
+    id:'s4', slug:'a-brown-sons-nursery',
+    name:"A. Brown & Sons Nursery",
+    city:"Brookville", address:"11506 N Dayton-Greenville Pike, Brookville, OH 45309",
+    type:"Nursery", phone:"(937) 833-4500",
+    website:"https://www.brownsnursery.com",
+    desc:"A 22-acre nursery with 65+ years of growing expertise in shade and ornamental trees, evergreens, shrubs, and select perennials. The Brown family opened to the public in the 1980s and now welcomes homeowners every Friday through Sunday alongside their wholesale and re-wholesaler business.",
+    specialties:["Shade Trees","Ornamental Trees","Evergreens","Shrubs","Wholesale","Landscaping"],
+    hours:{Mon:"Closed",Tue:"Closed",Wed:"Closed",Thu:"Closed",Fri:"8am–5pm",Sat:"8am–5pm",Sun:"10am–4pm"},
+    lat:39.8490, lng:-84.4145, userAdded:false
+  },
+  {
+    id:'s5', slug:'knollwood-garden-center',
+    name:"Knollwood Garden Center",
+    city:"Dayton", address:"4185 Far Hills Ave, Dayton, OH 45429",
+    type:"Garden Center", phone:"(937) 293-5671",
+    website:"",
+    desc:"A well-regarded local garden center and landscaping company serving the south Dayton area with a strong selection of annuals, perennials, shrubs, and trees. Knollwood offers landscape design and installation services for residential and commercial clients.",
+    specialties:["Annuals","Perennials","Shrubs","Trees","Landscape Design"],
+    hours:{Mon:"9am–6pm",Tue:"9am–6pm",Wed:"9am–6pm",Thu:"9am–6pm",Fri:"9am–6pm",Sat:"9am–5pm",Sun:"10am–4pm"},
+    lat:39.6838, lng:-84.1667, userAdded:false
+  },
+  {
+    id:'s6', slug:'grandmas-gardens',
+    name:"Grandma's Gardens & Landscape",
+    city:"Waynesville", address:"Waynesville, OH 45068",
+    type:"Garden Center", phone:"", website:"",
+    desc:"A 14-acre full-service garden center halfway between Dayton and Cincinnati. A beloved destination for plant lovers across the Miami Valley, with an emphasis on seasonal color and container gardens.",
+    specialties:["Seasonal Color","Containers","Shrubs","Perennials","Landscape"],
+    hours:{Mon:"9am–5pm",Tue:"9am–5pm",Wed:"9am–5pm",Thu:"9am–5pm",Fri:"9am–5pm",Sat:"9am–5pm",Sun:"Closed"},
+    lat:39.5354, lng:-84.0842, userAdded:false
+  },
+  {
+    id:'s7', slug:'shademakers-nursery',
+    name:"Shademakers Nursery & Landscape",
+    city:"Dayton", address:"Dayton, OH",
+    type:"Nursery", phone:"", website:"",
+    desc:"An extensive selection of trees, shrubs, perennials, annuals, and herbs grown on their own farm. Shademakers opens a seasonal Christmas shop starting in November, carrying wreaths, trees, and poinsettias.",
+    specialties:["Trees","Shrubs","Perennials","Herbs","Christmas Trees"],
+    hours:{Mon:"9am–5pm",Tue:"9am–5pm",Wed:"9am–5pm",Thu:"9am–5pm",Fri:"9am–5pm",Sat:"9am–5pm",Sun:"Closed"},
+    lat:39.7295, lng:-84.2422, userAdded:false
+  },
+  {
+    id:'s8', slug:'berns-garden-center',
+    name:"Berns Garden Center",
+    city:"Dayton", address:"Dayton, OH",
+    type:"Garden Center", phone:"", website:"",
+    desc:"A popular local garden center frequently recommended by Dayton-area gardeners for its plant selection and knowledgeable staff. A neighborhood staple.",
+    specialties:["Annuals","Perennials","Vegetables","Houseplants"],
+    hours:{Mon:"9am–6pm",Tue:"9am–6pm",Wed:"9am–6pm",Thu:"9am–6pm",Fri:"9am–6pm",Sat:"9am–5pm",Sun:"10am–3pm"},
+    lat:39.7591, lng:-84.195, userAdded:false
+  },
+  {
+    id:'s9', slug:'andys-garden',
+    name:"Andy's Garden",
+    city:"Dayton", address:"Dayton, OH",
+    type:"Garden Center", phone:"", website:"",
+    desc:"Garden center, flower shop, and gift shop in one. Over 2 acres of greenhouses with 90% of plants grown on-site. Known for a strong selection of houseplants, trees, annuals, perennials, roses, herbs, and vegetables.",
+    specialties:["Houseplants","Roses","Annuals","Perennials","Gift Shop","Flowers"],
+    hours:{Mon:"9am–6pm",Tue:"9am–6pm",Wed:"9am–6pm",Thu:"9am–6pm",Fri:"9am–6pm",Sat:"9am–5pm",Sun:"11am–4pm"},
+    lat:39.752, lng:-84.156, userAdded:false
+  },
+];
+
+const WGN_SEED = [
+  { type:'arrival', badge:'Arrival', nursery:"Stockslager's", text:"Fresh Japanese maples just unloaded — Bloodgood and Emperor I varieties. Limited quantities.", time:"2h ago", source:"Owner post", sourceType:"owner" },
+  { type:'sale',    badge:'Sale',    nursery:"Siebenthaler's", text:"End-of-season perennials 40% off this weekend only. Great time to fill in fall gaps.", time:"5h ago", source:"Community tip", sourceType:"community" },
+  { type:'bloom',   badge:'In Bloom', nursery:"North Dayton GC", text:"Knockout roses are going off right now — huge flush of blooms, best I've seen in years.", time:"Yesterday", source:"Community tip", sourceType:"community" },
+  { type:'arrival', badge:'Arrival', nursery:"A. Brown & Sons", text:"Native Ohio wildflower plugs available — wild bergamot, coneflower, black-eyed Susan mix.", time:"2 days ago", source:"r/Dayton", sourceType:"reddit" },
+  { type:'tip',     badge:'Tip',     nursery:"Knollwood", text:"If you're looking for fall mums, go Tuesday morning — that's when the fresh flats come in.", time:"3 days ago", source:"Community tip", sourceType:"community" },
+  { type:'bloom',   badge:'In Bloom', nursery:"Grandma's Gardens", text:"The ornamental grasses section is stunning right now — Miscanthus and Karl Foerster in full plume.", time:"4 days ago", source:"Community tip", sourceType:"community" },
+];
+
+const BADGE_CLASS = { arrival:'badge-arrival', bloom:'badge-bloom', sale:'badge-sale', tip:'badge-tip', owner:'badge-owner' };
+const SOURCE_ICON = { owner:'🌿', community:'👤', reddit:'🔗' };
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let userEntries = [];
+let activeFilter = 'all';
+let searchTerm = '';
+let currentView = 'grid';
+let mapInstance = null;
+let markers = [];
+let activeMarkerId = null;
+const STORAGE_KEY = 'lg-dayton-v1';
+
+async function load(){ try{ const r=await window.storage?.get(STORAGE_KEY); if(r?.value) userEntries=JSON.parse(r.value); }catch{} }
+async function save(){ try{ await window.storage?.set(STORAGE_KEY,JSON.stringify(userEntries)); }catch{} }
+
+function all(){ return [...SEED,...userEntries]; }
+function filtered(){
+  return all().filter(n=>{
+    const q=searchTerm.toLowerCase();
+    const ms=!q||n.name.toLowerCase().includes(q)||n.city.toLowerCase().includes(q)||(n.desc||'').toLowerCase().includes(q)||n.type.toLowerCase().includes(q)||(n.specialties||[]).join(' ').toLowerCase().includes(q);
+    const mf=activeFilter==='all'||n.type===activeFilter;
+    return ms&&mf;
+  });
+}
+
+// ─── WHAT'S GOOD NOW ─────────────────────────────────────────────────────
+function renderWGN(){
+  const feed = document.getElementById('wgn-feed');
+  if(!feed) return;
+  feed.innerHTML = WGN_SEED.map(p=>`
+    <div class="wgn-card" onclick="openWGN('${p.nursery}')">
+      <div class="wgn-card-top">
+        <span class="wgn-badge ${BADGE_CLASS[p.type]||'badge-tip'}">${p.badge}</span>
+        <span class="wgn-time">${p.time}</span>
+      </div>
+      <div class="wgn-nursery">${p.nursery}</div>
+      <div class="wgn-text">${p.text}</div>
+      <div class="wgn-source">${SOURCE_ICON[p.sourceType]||'👤'} ${p.source}</div>
+    </div>`).join('');
+}
+function openWGN(name){
+  const n = all().find(x=>x.name.startsWith(name.replace(' GC','')));
+  if(n) navigate('/nursery/'+n.slug);
+}
+
+// ─── SEO / JSON-LD ────────────────────────────────────────────────────────
+function setMeta(title, desc, canonical){
+  document.getElementById('page-title').textContent = title;
+  document.getElementById('page-desc').setAttribute('content', desc);
+  document.getElementById('og-title').setAttribute('content', title);
+  document.getElementById('og-desc').setAttribute('content', desc);
+  document.getElementById('canonical').setAttribute('href', canonical);
+}
+
+function injectCitySchema(){
+  const items = all().map((n,i)=>({
+    "@type":"ListItem",
+    "position": i+1,
+    "item":{
+      "@type":"LocalBusiness",
+      "name": n.name,
+      "address":{ "@type":"PostalAddress", "addressLocality": n.city, "addressRegion":"OH", "addressCountry":"US" },
+      "url": n.website || `https://locallygreen.com/dayton/${n.slug||n.id}`,
+      ...(n.lat ? {"geo":{"@type":"GeoCoordinates","latitude":n.lat,"longitude":n.lng}} : {})
+    }
+  }));
+  document.getElementById('json-ld').textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"ItemList",
+    "name":"Nurseries and Greenhouses in Dayton, Ohio",
+    "description":"A community-curated directory of local nurseries, greenhouses, and garden centers in the Dayton, Ohio metropolitan area.",
+    "url":"https://locallygreen.com/dayton",
+    "itemListElement": items
+  }, null, 2);
+}
+
+function injectNurserySchema(n){
+  document.getElementById('json-ld').textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":["LocalBusiness","GardenStore"],
+    "name": n.name,
+    "description": n.desc,
+    "address":{
+      "@type":"PostalAddress",
+      "streetAddress": n.address.split(',')[0]||'',
+      "addressLocality": n.city,
+      "addressRegion":"OH",
+      "addressCountry":"US"
+    },
+    ...(n.phone ? {"telephone": n.phone} : {}),
+    ...(n.website ? {"url": n.website} : {}),
+    ...(n.lat ? {"geo":{"@type":"GeoCoordinates","latitude":n.lat,"longitude":n.lng}} : {}),
+    "servesCuisine": n.specialties?.join(', '),
+    "openingHours": n.hours ? Object.entries(n.hours).filter(([,v])=>v!=='Closed').map(([d,h])=>d.slice(0,2)+' '+h).join(', ') : undefined,
+    "isPartOf":{"@type":"WebSite","name":"LocallyGreen","url":"https://locallygreen.com"},
+    "breadcrumb":{
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"LocallyGreen","item":"https://locallygreen.com"},
+        {"@type":"ListItem","position":2,"name":"Dayton","item":"https://locallygreen.com/dayton"},
+        {"@type":"ListItem","position":3,"name":n.name,"item":`https://locallygreen.com/dayton/${n.slug}`}
+      ]
+    }
+  }, null, 2);
+}
+
+// ─── GRID ────────────────────────────────────────────────────────────────
+function renderGrid(){
+  const data=filtered();
+  document.getElementById('stat-total').textContent=all().length;
+  document.getElementById('dir-meta').textContent=`Showing ${data.length} of ${all().length} locations`;
+  const grid=document.getElementById('grid');
+  if(data.length===0){
+    grid.innerHTML=`<div class="empty"><h3>No results found</h3><p>Try a different search, or <span style="color:var(--fern);cursor:pointer" onclick="document.getElementById('overlay').classList.add('open')">add a missing listing</span>.</p></div>`;
+    return;
+  }
+  grid.innerHTML=data.map((n,i)=>{
+    const c=tc(n);
+    return `<a class="ncard" href="#/nursery/${n.slug||n.id}" onclick="navigate('/nursery/${n.slug||n.id}')" style="animation-delay:${i*40}ms">
+      <div class="ncard-accent" style="background:linear-gradient(90deg,${c},${c}88)"></div>
+      <div class="ncard-body">
+        <div class="ncard-tags">
+          <span class="ntag">${n.type}</span>
+          ${n.userAdded?'<span class="ntag community">Community</span>':''}
+        </div>
+        <div class="ncard-name">${n.name}</div>
+        <div class="ncard-addr">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${n.city}, OH
+        </div>
+        <div class="ncard-desc">${n.desc}</div>
+      </div>
+      <div class="ncard-foot">
+        ${n.website?`<span class="ncard-link"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg> Website</span>`:''}
+        <span class="ncard-cta">View profile <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+// ─── MAP ─────────────────────────────────────────────────────────────────
+function mkIcon(c){
+  const s=encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40"><path d="M15 0C6.7 0 0 6.7 0 15c0 10 15 25 15 25S30 25 30 15C30 6.7 23.3 0 15 0z" fill="${c}" stroke="white" stroke-width="2"/><path d="M15 8Q17 12 21 13Q17 15 15 21Q13 15 9 13Q13 12 15 8Z" fill="white" opacity=".9"/></svg>`);
+  return L.divIcon({html:`<img src="data:image/svg+xml,${s}" width="30" height="40">`,className:'',iconSize:[30,40],iconAnchor:[15,40],popupAnchor:[0,-42]});
+}
+
+function renderMap(){
+  const mapEl=document.getElementById('map');
+  if(!mapEl) return;
+  if(!mapInstance){
+    mapInstance=L.map('map').setView([39.758,-84.192],11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19}).addTo(mapInstance);
+  }
+  const data=filtered();
+  markers.forEach(m=>m.marker.remove()); markers=[];
+  data.forEach(n=>{
+    if(!n.lat) return;
+    const m=L.marker([n.lat,n.lng],{icon:mkIcon(tc(n))}).addTo(mapInstance).bindPopup(
+      `<div class="popup-acc" style="background:${tc(n)}"></div><div class="popup-in">
+      <div class="popup-type">${n.type}</div>
+      <div class="popup-name">${n.name}</div>
+      <div class="popup-addr">${n.address||n.city+', OH'}</div>
+      <button class="popup-view" onclick="navigate('/nursery/${n.slug||n.id}')">View profile →</button>
+      </div>`,{maxWidth:240}
+    );
+    m.on('click',()=>{ activeMarkerId=n.id; renderMapList(data); scrollMapTo(n.id); });
+    markers.push({id:n.id,marker:m});
+  });
+  if(markers.length){const g=L.featureGroup(markers.map(m=>m.marker)); mapInstance.fitBounds(g.getBounds().pad(.15));}
+  renderMapList(data);
+  document.getElementById('map-meta').textContent=`${markers.length} location${markers.length!==1?'s':''} shown`;
+  setTimeout(()=>mapInstance.invalidateSize(),60);
+}
+
+function renderMapList(data){
+  const list=document.getElementById('map-list');
+  list.innerHTML=data.filter(n=>n.lat).map(n=>`
+    <div class="map-item ${n.id===activeMarkerId?'active':''}" data-id="${n.id}" onclick="mapClick('${n.id}','${n.slug||n.id}')">
+      <div class="map-dot" style="background:${tc(n)}"></div>
+      <div><div class="map-item-name">${n.name}</div><div class="map-item-meta">${n.city} · ${n.type}</div></div>
+    </div>`).join('');
+}
+function mapClick(id,slug){
+  activeMarkerId=id;
+  renderMapList(filtered());
+  const f=markers.find(m=>m.id===id);
+  if(f){ mapInstance.setView(f.marker.getLatLng(),14,{animate:true}); f.marker.openPopup(); }
+}
+function scrollMapTo(id){
+  const el=document.querySelector(`.map-item[data-id="${id}"]`);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ─── VIEW SWITCH ─────────────────────────────────────────────────────────
+function switchView(v){
+  currentView=v;
+  document.getElementById('grid-view').classList.toggle('hidden',v!=='grid');
+  document.getElementById('map-view').classList.toggle('hidden',v!=='map');
+  document.getElementById('btn-grid').classList.toggle('active',v==='grid');
+  document.getElementById('btn-map').classList.toggle('active',v==='map');
+  if(v==='grid') renderGrid(); else renderMap();
+}
+
+// ─── DETAIL PAGE ─────────────────────────────────────────────────────────
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function renderDetail(n){
+  const today=DAYS[new Date().getDay()];
+  const c=tc(n);
+
+  const hoursRows=n.hours ? Object.entries(n.hours).map(([d,h])=>`
+    <tr class="${d===today?'today':''}">
+      <td>${d}</td>
+      <td>${h}${d===today&&h!=='Closed'?'<span class="open-badge">Open today</span>':''}</td>
+    </tr>`).join('') : '<tr><td colspan="2" style="color:var(--text3)">Hours not listed</td></tr>';
+
+  const specs=(n.specialties||[]).map(s=>`<span class="spec-tag">${s}</span>`).join('');
+
+  const feedItems=WGN_SEED.filter(p=>n.name.includes(p.nursery.split(' ')[0])).slice(0,3);
+  const feedHTML=feedItems.length ? feedItems.map(p=>`
+    <div class="feed-item">
+      <div class="feed-dot-col"><div class="feed-dot-outer" style="background:${tc(n)}22"><div style="width:6px;height:6px;border-radius:50%;background:${tc(n)}"></div></div></div>
+      <div class="feed-content">
+        <div class="feed-badge-row">
+          <span class="wgn-badge ${BADGE_CLASS[p.type]||'badge-tip'}">${p.badge}</span>
+          <span style="font-size:.7rem;color:var(--text3)">${p.time}</span>
+        </div>
+        <div class="feed-text">${p.text}</div>
+        <div class="feed-meta"><span>${SOURCE_ICON[p.sourceType]} ${p.source}</span></div>
+      </div>
+    </div>`).join('') : `<p style="font-size:.84rem;color:var(--text3);padding:8px 0">No recent updates. <span style="color:var(--fern);cursor:pointer">Add one?</span></p>`;
+
+  const mapSection=n.lat ? `
+    <div class="detail-card">
+      <div class="detail-card-title">Location</div>
+      <div id="detail-map"></div>
+      ${n.address&&!n.address.startsWith('Dayton')?`<p style="font-size:.8rem;color:var(--text2);margin-top:10px">${n.address}</p>`:''}
+    </div>` : '';
+
+  document.getElementById('detail-content').innerHTML=`
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="#/dayton" onclick="navigate('/dayton')">LocallyGreen</a>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      <a href="#/dayton" onclick="navigate('/dayton')">Dayton</a>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      <span>${n.name}</span>
+    </nav>
+
+    <!-- Hero card -->
+    <div class="detail-hero">
+      <div class="detail-hero-accent" style="background:linear-gradient(90deg,${c},${c}66)"></div>
+      <div class="detail-hero-body">
+        <div class="detail-tags">
+          <span class="ntag">${n.type}</span>
+          ${n.userAdded?'<span class="ntag community">Community Added</span>':'<span class="ntag" style="background:#e8f4e8;color:#2a5e2a">✓ Verified Listing</span>'}
+        </div>
+        <div class="detail-hero-top">
+          <div style="flex:1">
+            <h1 class="detail-name">${n.name}</h1>
+            <div class="detail-meta">
+              <div class="detail-meta-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${n.address||n.city+', OH'}
+              </div>
+              ${n.phone?`<div class="detail-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:${n.phone}">${n.phone}</a></div>`:''}
+              ${n.website?`<div class="detail-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg><a href="${n.website}" target="_blank">${n.website.replace('https://','')}</a></div>`:''}
+              <div class="detail-meta-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                ${n.city}, Ohio · USDA Zone 5b/6a
+              </div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            ${n.website?`<a class="action-btn primary" href="${n.website}" target="_blank">Visit website</a>`:''}
+            ${n.phone?`<a class="action-btn secondary" href="tel:${n.phone}">Call now</a>`:'<button class="action-btn secondary" onclick="document.getElementById(\'overlay\').classList.add(\'open\')">Suggest edit</button>'}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="detail-grid">
+      <div>
+        <!-- About -->
+        <div class="detail-card">
+          <div class="detail-card-title">About</div>
+          <p class="detail-desc">${n.desc}</p>
+        </div>
+        <!-- Specialties -->
+        ${specs?`<div class="detail-card">
+          <div class="detail-card-title">Specialties</div>
+          <div class="specialties">${specs}</div>
+        </div>`:''}
+        <!-- What's Good Now -->
+        <div class="detail-card">
+          <div class="detail-card-title" style="display:flex;align-items:center;gap:10px">
+            What's Good Now
+            <span class="wgn-live" style="font-size:.65rem">Community feed</span>
+          </div>
+          ${feedHTML}
+        </div>
+      </div>
+      <div>
+        <!-- Hours -->
+        <div class="detail-card">
+          <div class="detail-card-title">Hours</div>
+          <table class="hours-table"><tbody>${hoursRows}</tbody></table>
+          <p style="font-size:.72rem;color:var(--text3);margin-top:12px">Hours may vary seasonally. Call ahead to confirm.</p>
+        </div>
+        <!-- Map -->
+        ${mapSection}
+      </div>
+    </div>`;
+
+  // Init mini map if coordinates exist
+  if(n.lat){
+    setTimeout(()=>{
+      const dm=L.map('detail-map',{zoomControl:false,dragging:false,scrollWheelZoom:false}).setView([n.lat,n.lng],14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'',maxZoom:19}).addTo(dm);
+      L.marker([n.lat,n.lng],{icon:mkIcon(c)}).addTo(dm);
+    },80);
+  }
+
+  injectNurserySchema(n);
+  setMeta(
+    `${n.name} — LocallyGreen Dayton`,
+    `${n.type} in ${n.city}, Ohio. ${n.desc.slice(0,140)}…`,
+    `https://locallygreen.com/dayton/${n.slug}`
+  );
+}
+
+// ─── ROUTER ──────────────────────────────────────────────────────────────
+function navigate(path){
+  history.pushState(null,'','#'+path);
+  route(path);
+}
+function route(path){
+  const cityPage=document.getElementById('page-city');
+  const detailPage=document.getElementById('page-detail');
+
+  if(path==='/dayton'||path==='/'){
+    cityPage.classList.add('active');
+    detailPage.classList.remove('active');
+    setMeta(
+      "LocallyGreen Dayton — Local Nurseries & Greenhouses",
+      "Find the best local nurseries, greenhouses, and garden centers in Dayton, Ohio. Community-maintained, always fresh.",
+      "https://locallygreen.com/dayton"
+    );
+    injectCitySchema();
+    renderWGN();
+    if(currentView==='grid') renderGrid(); else renderMap();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else if(path.startsWith('/nursery/')){
+    const slug=path.replace('/nursery/','');
+    const n=all().find(x=>(x.slug||x.id)===slug);
+    if(!n){ navigate('/dayton'); return; }
+    cityPage.classList.remove('active');
+    detailPage.classList.add('active');
+    renderDetail(n);
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    navigate('/dayton');
+  }
+}
+
+// ─── SUBMIT ───────────────────────────────────────────────────────────────
+async function submitListing(){
+  const name=document.getElementById('f-name').value.trim();
+  const city=document.getElementById('f-city').value.trim();
+  const type=document.getElementById('f-type').value;
+  if(!name||!city||!type){ showToast('Please fill in Name, City, and Type.', true); return; }
+  const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const entry={
+    id:'u'+Date.now(), slug,name,city,
+    address:document.getElementById('f-addr').value.trim()||city+', OH',
+    type,phone:document.getElementById('f-phone').value.trim(),
+    website:document.getElementById('f-web').value.trim(),
+    desc:document.getElementById('f-desc').value.trim()||'Community-submitted location.',
+    specialties:[],
+    hours:{Mon:'–',Tue:'–',Wed:'–',Thu:'–',Fri:'–',Sat:'–',Sun:'–'},
+    lat:39.758+(Math.random()-.5)*.09, lng:-84.192+(Math.random()-.5)*.13,
+    userAdded:true
+  };
+  userEntries.push(entry); await save();
+  document.getElementById('overlay').classList.remove('open');
+  ['f-name','f-city','f-addr','f-phone','f-web','f-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-type').value='';
+  if(currentView==='grid') renderGrid(); else renderMap();
+  showToast('🌿 Location added — thank you!');
+  document.getElementById('stat-total').textContent=all().length;
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────
+function showToast(msg,isError){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.style.background=isError?'#b83030':'var(--moss)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ─── EVENTS ───────────────────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input',e=>{
+  searchTerm=e.target.value;
+  if(currentView==='grid') renderGrid(); else renderMap();
+});
+document.querySelectorAll('.pill').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+    b.classList.add('active'); activeFilter=b.dataset.filter;
+    if(currentView==='grid') renderGrid(); else renderMap();
+  });
+});
+document.getElementById('btn-grid').addEventListener('click',()=>switchView('grid'));
+document.getElementById('btn-map').addEventListener('click',()=>switchView('map'));
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('overlay')) document.getElementById('overlay').classList.remove('open'); });
+window.addEventListener('popstate',()=>route(location.hash.slice(1)||'/dayton'));
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+(async()=>{
+  await load();
+  const path=location.hash.slice(1)||'/dayton';
+  route(path);
+})();
+</script>
+</body>
+</html>
