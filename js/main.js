@@ -46,6 +46,18 @@ async function init() {
       document.getElementById('overlay').classList.remove('open');
   });
 
+  // Collapse hero on scroll so map becomes the focus
+  const hero = document.getElementById('city-hero');
+  if (hero) {
+    window.addEventListener('scroll', () => {
+      hero.classList.toggle('hero-collapsed', window.scrollY > 60);
+    }, { passive: true });
+  }
+
+  // Dynamic copyright year
+  const yearEl = document.getElementById('footer-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
   window.addEventListener('popstate', () => route(location.hash.slice(1) || '/dayton'));
   route(location.hash.slice(1) || '/dayton');
 }

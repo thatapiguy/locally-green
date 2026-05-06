@@ -112,6 +112,12 @@ main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
   padding: 56px 28px 64px;
   position: relative;
   overflow: hidden;
+  max-height: 600px;
+  transition: max-height .45s cubic-bezier(.4,0,.2,1), padding .45s cubic-bezier(.4,0,.2,1);
+}
+.city-hero.hero-collapsed {
+  max-height: 0;
+  padding: 0;
 }
 .city-hero::before {
   content: '';
@@ -125,6 +131,10 @@ main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
   max-width: 1080px;
   margin: 0 auto;
   position: relative;
+  transition: opacity .25s ease;
+}
+.city-hero.hero-collapsed .city-hero-inner {
+  opacity: 0;
 }
 .city-eyebrow {
   display: inline-flex;
@@ -726,7 +736,54 @@ footer {
   .detail-hero-top{flex-direction:column}
   .dir-toolbar{flex-direction:column;align-items:stretch}
   .search-wrap{min-width:100%}
-  .map-view{flex-direction:column}
+  /* sidebar is first in DOM (left on desktop); column-reverse keeps map on top on mobile */
+  .map-view{flex-direction:column-reverse}
   .map-sidebar{width:100%;height:220px;border-left:none;border-top:1px solid var(--border)}
   #map{height:300px}
 }
+
+/* ── WGN view-all link ── */
+.wgn-view-all {
+  font-size: .74rem;
+  font-weight: 600;
+  color: var(--fern);
+  text-decoration: none;
+  letter-spacing: .02em;
+}
+.wgn-view-all:hover { text-decoration: underline; }
+
+/* ── FEED PAGE ── */
+.feed-page-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 28px 80px;
+}
+.feed-page-hd {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.feed-page-hd h1 {
+  font-family: 'Lora', serif;
+  font-size: 1.8rem;
+  color: var(--moss);
+  letter-spacing: -.02em;
+}
+.feed-full-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: box-shadow .2s, transform .2s;
+}
+.feed-full-item:hover { box-shadow: 0 6px 24px rgba(31,51,32,.1); transform: translateY(-2px); }
+.feed-full-item-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.feed-full-nursery { font-size: .72rem; font-weight: 600; color: var(--fern); text-transform: uppercase; letter-spacing: .05em; }
+.feed-full-text { font-size: .9rem; color: var(--bark); line-height: 1.6; margin-bottom: 8px; }
+.feed-full-meta { font-size: .72rem; color: var(--text3); display: flex; gap: 12px; }
